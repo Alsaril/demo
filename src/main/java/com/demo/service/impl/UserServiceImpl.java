@@ -22,7 +22,7 @@ import java.sql.Statement;
 public class UserServiceImpl implements UserService {
     private static final RowMapper<User> USER_MAPPER =
             (res, rowNum) -> new User(res.getInt(1),
-                    res.getString(2), res.getString(3));
+                    res.getString(2), res.getString(3), res.getInt(4));
     private JdbcTemplate template;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private RoleService roleService;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User get(String username) {
         try {
-            return template.queryForObject("SELECT `id`, `username`, `password` FROM user WHERE `username`=?", USER_MAPPER, username);
+            return template.queryForObject("SELECT `id`, `username`, `password`, `balance` FROM user WHERE `username`=?", USER_MAPPER, username);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
