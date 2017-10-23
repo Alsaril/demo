@@ -5,6 +5,7 @@ import com.demo.service.SecurityService;
 import com.demo.service.UserService;
 import com.demo.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,7 +43,12 @@ public class UserController {
             return "registration";
         }
 
-        userService.create(userForm);
+        try {
+            userService.create(userForm);
+        } catch (DuplicateKeyException e) {
+            bindingResult.rejectValue("username", "Duplicate.userForm.username");
+            return "registration";
+        }
 
         securityService.login(userForm.getUsername(), userForm.getPassword());
 
